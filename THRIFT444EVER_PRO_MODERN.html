@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THRIFT.444EVER PRO</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
+body{background:#0b0b0b;color:#fff}
+header{background:#000;padding:15px 25px;position:sticky;top:0;display:flex;justify-content:space-between;align-items:center}
+.logo{color:#ffd700;font-size:28px;font-weight:bold}
+nav a{color:white;text-decoration:none;margin-left:15px}
+.hero{padding:80px 20px;text-align:center;background:linear-gradient(135deg,#111,#222)}
+.hero h1{font-size:52px;color:#ffd700}
+.container{padding:25px}
+.search{width:100%;padding:12px;border-radius:8px;border:none;margin-bottom:20px}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.card{background:#181818;padding:15px;border-radius:12px}
+.card img{width:100%;height:280px;object-fit:cover;border-radius:10px}
+.price{color:#ffd700;font-size:22px;margin:10px 0}
+.btn{background:#ffd700;color:#000;border:none;padding:10px 15px;border-radius:8px;cursor:pointer}
+.panel{background:#181818;padding:20px;border-radius:12px;margin-top:25px}
+footer{text-align:center;padding:30px;color:#aaa}
+
+html{scroll-behavior:smooth}
+.hero{animation:fadeIn 1s ease}
+.card{transition:.3s}
+.card:hover{transform:translateY(-8px);box-shadow:0 0 20px rgba(255,215,0,.3)}
+.btn:hover{transform:scale(1.05)}
+.about{padding:60px 20px;text-align:center;background:#121212}
+.about h2{color:#ffd700;margin-bottom:15px}
+.about p{max-width:800px;margin:auto;line-height:1.8;color:#ccc}
+.stats{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:30px}
+.stat{background:#181818;padding:20px;border-radius:12px;min-width:150px}
+.wa-float{position:fixed;right:20px;bottom:20px;background:#25D366;color:#fff;text-decoration:none;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">THRIFT.444EVER</div>
+<nav>
+<a href="#produk">Produk</a>
+<a href="#wishlist">Wishlist</a>
+<a href="#cart">Keranjang (<span id="cartCount">0</span>)</a>
+<a href="#tracking">Lacak</a>
+</nav>
+</header>
+
+<section class="hero">
+<h1>THRIFT.444EVER</h1>
+<p>Premium Thrift Store</p>
+</section>
+
+<section class="about">
+<h2>Tentang THRIFT.444EVER</h2>
+<p>
+THRIFT.444EVER adalah toko thrift premium yang menyediakan pakaian vintage,
+streetwear, dan fashion pilihan dengan kualitas terbaik dan harga terjangkau.
+</p>
+
+<div class="stats">
+<div class="stat"><h3>500+</h3><p>Pelanggan</p></div>
+<div class="stat"><h3>1000+</h3><p>Produk Terjual</p></div>
+<div class="stat"><h3>4.9★</h3><p>Rating</p></div>
+</div>
+</section>
+
+<div class="container">
+<input class="search" id="search" placeholder="Cari produk..." onkeyup="renderProducts()">
+
+<h2 id="produk">Produk</h2><br>
+<div class="products" id="products"></div>
+
+<div id="wishlist" class="panel">
+<h2>Wishlist</h2>
+<div id="wishlistItems">Belum ada wishlist.</div>
+</div>
+
+<div id="cart" class="panel">
+<h2>Keranjang</h2>
+<div id="cartItems"></div>
+<h3>Total: Rp <span id="total">0</span></h3>
+</div>
+
+<div class="panel">
+<h2>Checkout WhatsApp</h2>
+<input id="nama" placeholder="Nama" style="width:100%;padding:10px;margin:10px 0">
+<button class="btn" onclick="checkoutWA()">Pesan via WhatsApp</button>
+</div>
+
+<div id="tracking" class="panel">
+<h2>Lacak Pesanan</h2>
+<p>Status: <span id="status">Belum ada pesanan</span></p>
+</div>
+</div>
+
+<footer>© 2026 THRIFT.444EVER PRO</footer>
+
+<script>
+const productsData=[...Array(13)].map((_,i)=>({
+id:i+1,
+nama:'Produk '+(i+1),
+harga:80000+(i*10000),
+img:(i+1)+'.jpeg'
+}));
+
+let cart=[];
+let wishlist=[];
+
+function renderProducts(){
+const q=document.getElementById('search').value.toLowerCase();
+let html='';
+productsData.filter(p=>p.nama.toLowerCase().includes(q)).forEach(p=>{
+html+=`<div class="card">
+<img src="${p.img}">
+<h3>${p.nama}</h3>
+<p class="price">Rp ${p.harga.toLocaleString()}</p>
+<button class="btn" onclick="addCart(${p.id})">Keranjang</button>
+<button class="btn" onclick="addWish(${p.id})">♥ Wishlist</button>
+</div>`;
+});
+products.innerHTML=html;
+}
+
+function addCart(id){
+cart.push(productsData.find(x=>x.id===id));
+renderCart();
+}
+function addWish(id){
+wishlist.push(productsData.find(x=>x.id===id));
+wishlistItems.innerHTML=wishlist.map(x=>x.nama).join('<br>');
+}
+function renderCart(){
+let total=0;
+cartItems.innerHTML=cart.map(x=>{
+total+=x.harga;
+return x.nama+' - Rp '+x.harga.toLocaleString();
+}).join('<br>');
+document.getElementById('total').innerText=total.toLocaleString();
+cartCount.innerText=cart.length;
+}
+function checkoutWA(){
+if(cart.length===0){alert('Keranjang kosong');return;}
+let nama=document.getElementById('nama').value;
+let pesan='Halo THRIFT.444EVER,%0ASaya '+nama+' ingin memesan:%0A';
+cart.forEach(i=>pesan+=i.nama+'%0A');
+window.open('https://wa.me/6288287072552?text='+pesan,'_blank');
+document.getElementById('status').innerText='Menunggu Pembayaran';
+}
+renderProducts();
+</script>
+
+<a class="wa-float" href="https://wa.me/6288287072552" target="_admin telah di hubungi">💬</a>
+</body>
+</html>
